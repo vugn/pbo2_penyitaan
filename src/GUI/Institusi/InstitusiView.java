@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,10 +29,52 @@ public class InstitusiView extends JFrame {
         setVisible(true);
         loadInstitusiData();
 
+        updateButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CreateInstitusiForm(InstitusiView.this).setVisible(true);
+                new CreateInstitusiForm(InstitusiView.this, null).setVisible(true);
+            }
+        });
+
+        institusiTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateButton.setEnabled(true);
+                deleteButton.setEnabled(true);
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = institusiTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int id = (int) institusiTable.getValueAt(selectedRow, 0);
+                    String namaInstitusi = (String) institusiTable.getValueAt(selectedRow, 1);
+                    String alamat = (String) institusiTable.getValueAt(selectedRow, 2);
+
+                    Institusi institusi = new Institusi(id, namaInstitusi, alamat);
+                    new CreateInstitusiForm(InstitusiView.this, institusi).setVisible(true);
+                }
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = institusiTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int id = (int) institusiTable.getValueAt(selectedRow, 0);
+                    int response = JOptionPane.showConfirmDialog(null, "Apakah anda yakin untuk menghapus data Institusi ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        ConfigDB configDB = new ConfigDB();
+                        configDB.HapusDinamis("institusi", "id_institusi", String.valueOf(id));
+                        loadInstitusiData();
+                    }
+                }
             }
         });
     }

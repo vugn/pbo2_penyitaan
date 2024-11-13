@@ -71,7 +71,7 @@ public class BarangBuktiView extends JFrame {
                 int selectedRow = barangBuktiTable.getSelectedRow();
                 if (selectedRow != -1) {
                     int id = (int) barangBuktiTable.getValueAt(selectedRow, 0);
-                    int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                    int response = JOptionPane.showConfirmDialog(null, "Apakah anda yakin untuk menghapus data Barang Bukti ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
                     if (response == JOptionPane.YES_OPTION) {
                         ConfigDB configDB = new ConfigDB();
                         configDB.HapusDinamis("barang_bukti", "id_barang_bukti", String.valueOf(id));

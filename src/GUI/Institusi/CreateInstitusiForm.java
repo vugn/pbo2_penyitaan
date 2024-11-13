@@ -5,9 +5,6 @@ import ConfigDB.ConfigDB;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class CreateInstitusiForm extends JFrame {
     private JPanel panel;
@@ -15,14 +12,21 @@ public class CreateInstitusiForm extends JFrame {
     private JTextField alamatField;
     private JButton saveButton;
     private JButton cancelButton;
+    private Integer institusiId;
 
-    public CreateInstitusiForm(InstitusiView parent) {
-        setTitle("Tambah Institusi");
+    public CreateInstitusiForm(InstitusiView parent, Institusi institusi) {
+        setTitle(institusi == null ? "Tambah Institusi" : "Edit Institusi");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setContentPane(panel);
         setVisible(true);
+
+        if (institusi != null) {
+            institusiId = institusi.getId();
+            namaInstitusiField.setText(institusi.getNamaInstitusi());
+            alamatField.setText(institusi.getAlamat());
+        }
 
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -30,17 +34,18 @@ public class CreateInstitusiForm extends JFrame {
                 String namaInstitusi = namaInstitusiField.getText();
                 String alamat = alamatField.getText();
 
-                try (Connection connection = ConfigDB.getConnection()) {
-                    String query = "INSERT INTO institusi (nama_institusi, alamat_institusi) VALUES (?, ?)";
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setString(1, namaInstitusi);
-                    statement.setString(2, alamat);
-                    statement.executeUpdate();
-                    parent.loadInstitusiData();
-                    dispose();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                ConfigDB configDB = new ConfigDB();
+                if (institusiId == null) {
+                    String[] fields = {"nama_institusi", "alamat_institusi"};
+                    String[] values = {namaInstitusi, alamat};
+                    configDB.UbahDinamis("institusi", "id_institusi", String.valueOf(institusiId), fields, values);
+                } else {
+                    String[] fields = {"nama_institusi", "alamat_institusi"};
+                    String[] values = {namaInstitusi, alamat};
+                    configDB.UbahDinamis("institusi", "id_institusi", String.valueOf(institusiId), fields, values);
                 }
+                parent.loadInstitusiData();
+                dispose();
             }
         });
 
@@ -56,7 +61,7 @@ public class CreateInstitusiForm extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CreateInstitusiForm(null).setVisible(true);
+                new CreateInstitusiForm(null, null).setVisible(true);
             }
         });
     }
