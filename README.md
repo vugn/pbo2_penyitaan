@@ -32,6 +32,23 @@ and I use that for my final project in Pembangunan Berbasis Objek 2 (PBO 2) clas
 - MySQL Server
 - JDK 17+
 
+## Try It Out
+1. Make sure you have MySQL Server installed and running at localhost.
+2. Make sure your MySQL username is `root` and the password is empty.
+3. Make sure your MySQL running at localhost
+2. Create a new database:
+   - Connect to your MySQL server.
+   - Open the `pbo2_penyitaan.sql` file.
+   - Execute the script to create the database schema and initial data.
+3. Download the Pernyitaan.jar
+4. Run the JAR file:
+   - Open a terminal.
+   - Navigate to the directory where the JAR file is located.
+   - Run the JAR file using the following command:
+     ```sh
+     java -jar Pernyitaan.jar
+     ```
+
 ## Setup
 
 1. **Clone the repository:**
