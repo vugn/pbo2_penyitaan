@@ -35,13 +35,12 @@ public class CreateInstitusiForm extends JFrame {
                 String alamat = alamatField.getText();
 
                 ConfigDB configDB = new ConfigDB();
+                String[] fields = {"nama_institusi", "alamat_institusi"};
+                String[] values = {namaInstitusi, alamat};
+
                 if (institusiId == null) {
-                    String[] fields = {"nama_institusi", "alamat_institusi"};
-                    String[] values = {namaInstitusi, alamat};
-                    configDB.UbahDinamis("institusi", "id_institusi", String.valueOf(institusiId), fields, values);
+                    configDB.TambahDinamis("institusi", fields, values);
                 } else {
-                    String[] fields = {"nama_institusi", "alamat_institusi"};
-                    String[] values = {namaInstitusi, alamat};
                     configDB.UbahDinamis("institusi", "id_institusi", String.valueOf(institusiId), fields, values);
                 }
                 parent.loadInstitusiData();

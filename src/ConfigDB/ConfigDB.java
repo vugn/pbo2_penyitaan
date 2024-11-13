@@ -29,7 +29,6 @@ public class ConfigDB {
         }
     }
 
-
     public String getFieldValueEdit(String[] Field, String[] value) {
         StringBuilder hasil = new StringBuilder();
         int deteksi = Field.length - 1;
@@ -56,6 +55,7 @@ public class ConfigDB {
             }
             perintah.setString(Value.length + 1, IsiPrimary);
             perintah.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Data Berhasil Diubah");
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error in UbahDinamis", e);
         }
@@ -70,6 +70,30 @@ public class ConfigDB {
             JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus");
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error in HapusDinamis", e);
+        }
+    }
+
+    public void TambahDinamis(String NamaTabel, String[] Field, String[] Value) {
+        StringBuilder fields = new StringBuilder();
+        StringBuilder values = new StringBuilder();
+        for (int i = 0; i < Field.length; i++) {
+            fields.append(Field[i]);
+            values.append("?");
+            if (i < Field.length - 1) {
+                fields.append(", ");
+                values.append(", ");
+            }
+        }
+        String SQLTambah = "INSERT INTO " + NamaTabel + " (" + fields + ") VALUES (" + values + ")";
+        try (Connection connection = ConfigDB.getConnection();
+             PreparedStatement perintah = connection.prepareStatement(SQLTambah)) {
+            for (int i = 0; i < Value.length; i++) {
+                perintah.setString(i + 1, Value[i]);
+            }
+            perintah.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Data Berhasil Ditambahkan");
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error in TambahDinamis", e);
         }
     }
 }

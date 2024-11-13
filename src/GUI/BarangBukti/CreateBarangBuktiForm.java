@@ -1,3 +1,4 @@
+// CreateBarangBuktiForm.java
 package GUI.BarangBukti;
 
 import ConfigDB.ConfigDB;
@@ -52,13 +53,12 @@ public class CreateBarangBuktiForm extends JFrame {
                 int tindakPidanaId = tindakPidanaMap.get(selectedTindakPidana);
 
                 ConfigDB configDB = new ConfigDB();
+                String[] fields = {"asal_permohonan", "tersangka", "id_tindak_pidana", "dokumen", "tahap"};
+                String[] values = {asalPemohon, tersangka, String.valueOf(tindakPidanaId), dokumen, tahap};
+
                 if (barangBuktiId == null) {
-                    String[] fields = {"asal_permohonan", "tersangka", "id_tindak_pidana", "dokumen", "tahap"};
-                    String[] values = {asalPemohon, tersangka, String.valueOf(tindakPidanaId), dokumen, tahap};
-                    configDB.UbahDinamis("barang_bukti", "id_barang_bukti", String.valueOf(barangBuktiId), fields, values);
+                    configDB.TambahDinamis("barang_bukti", fields, values);
                 } else {
-                    String[] fields = {"asal_permohonan", "tersangka", "id_tindak_pidana", "dokumen", "tahap"};
-                    String[] values = {asalPemohon, tersangka, String.valueOf(tindakPidanaId), dokumen, tahap};
                     configDB.UbahDinamis("barang_bukti", "id_barang_bukti", String.valueOf(barangBuktiId), fields, values);
                 }
                 parent.loadBarangBuktiData();
