@@ -29,13 +29,45 @@ public class Login extends JFrame {
                 String password = new String(passwordField.getPassword());
                 if (ConfigDB.authenticate(username, password)) {
                     JOptionPane.showMessageDialog(Login.this, "Login successful!");
-                    new BarangBuktiView(); // Open BarangBukti UI
-                    dispose(); // Close the login window
+                    showActionButtons();
                 } else {
                     JOptionPane.showMessageDialog(Login.this, "Invalid username or password.");
                 }
             }
         });
+    }
+
+    private void showActionButtons() {
+        JFrame actionFrame = new JFrame("Select Action");
+        actionFrame.setSize(300, 150);
+        actionFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        actionFrame.setLocationRelativeTo(null);
+
+        JPanel actionPanel = new JPanel();
+        JButton barangBuktiButton = new JButton("Barang Bukti");
+        JButton anotherButton = new JButton("Institusin");
+
+        barangBuktiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new BarangBuktiView();
+                actionFrame.dispose();
+            }
+        });
+
+        anotherButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Add action for another button here
+                JOptionPane.showMessageDialog(actionFrame, "Another action selected!");
+            }
+        });
+
+        actionPanel.add(barangBuktiButton);
+        actionPanel.add(anotherButton);
+        actionFrame.add(actionPanel);
+        actionFrame.setVisible(true);
+        dispose(); // Close the login window
     }
 
     public static void main(String[] args) {

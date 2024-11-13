@@ -3,7 +3,6 @@ package GUI.BarangBukti;
 import ConfigDB.ConfigDB;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -26,37 +25,7 @@ public class CreateBarangBuktiForm extends JFrame {
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
-        panel = new JPanel(new GridLayout(6, 2));
         setContentPane(panel);
-
-        // Create form fields
-        panel.add(new JLabel("Asal Pemohon:"));
-        asalPemohonField = new JTextField();
-        panel.add(asalPemohonField);
-
-        panel.add(new JLabel("Tersangka:"));
-        tersangkaField = new JTextField();
-        panel.add(tersangkaField);
-
-        panel.add(new JLabel("Tindak Pidana:"));
-        tindakPidanaComboBox = new JComboBox<>();
-        panel.add(tindakPidanaComboBox);
-
-        panel.add(new JLabel("Dokumen:"));
-        dokumenField = new JTextField();
-        panel.add(dokumenField);
-
-        panel.add(new JLabel("Tahap:"));
-        tahapField = new JTextField();
-        panel.add(tahapField);
-
-        // Create buttons
-        saveButton = new JButton("Simpan");
-        cancelButton = new JButton("Batal");
-        panel.add(saveButton);
-        panel.add(cancelButton);
-
         setVisible(true);
 
         // Load tindak pidana data
