@@ -2,6 +2,7 @@ package GUI;
 
 import ConfigDB.ConfigDB;
 import GUI.BarangBukti.BarangBuktiView;
+import GUI.Institusi.InstitusiView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -45,7 +46,7 @@ public class Login extends JFrame {
 
         JPanel actionPanel = new JPanel();
         JButton barangBuktiButton = new JButton("Barang Bukti");
-        JButton anotherButton = new JButton("Institusin");
+        JButton anotherButton = new JButton("Institusi");
 
         barangBuktiButton.addActionListener(new ActionListener() {
             @Override
@@ -58,8 +59,8 @@ public class Login extends JFrame {
         anotherButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add action for another button here
-                JOptionPane.showMessageDialog(actionFrame, "Another action selected!");
+                new InstitusiView();
+                actionFrame.dispose();
             }
         });
 
