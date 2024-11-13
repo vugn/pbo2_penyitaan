@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,10 +29,55 @@ public class BarangBuktiView extends JFrame {
         setVisible(true);
         loadBarangBuktiData();
 
+        updateButton.setEnabled(false);
+        deleteButton.setEnabled(false);
+
         createButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CreateBarangBuktiForm(BarangBuktiView.this).setVisible(true);
+                new CreateBarangBuktiForm(BarangBuktiView.this, null).setVisible(true);
+            }
+        });
+
+        barangBuktiTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                updateButton.setEnabled(true);
+                deleteButton.setEnabled(true);
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = barangBuktiTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int id = (int) barangBuktiTable.getValueAt(selectedRow, 0);
+                    String asalPemohon = (String) barangBuktiTable.getValueAt(selectedRow, 1);
+                    String tersangka = (String) barangBuktiTable.getValueAt(selectedRow, 2);
+                    String tindakPidana = (String) barangBuktiTable.getValueAt(selectedRow, 3);
+                    String dokumen = (String) barangBuktiTable.getValueAt(selectedRow, 4);
+                    String tahap = (String) barangBuktiTable.getValueAt(selectedRow, 5);
+
+                    BarangBukti barangBukti = new BarangBukti(id, asalPemohon, tersangka, tindakPidana, dokumen, tahap);
+                    new CreateBarangBuktiForm(BarangBuktiView.this, barangBukti).setVisible(true);
+                }
+            }
+        });
+
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = barangBuktiTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    int id = (int) barangBuktiTable.getValueAt(selectedRow, 0);
+                    int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        ConfigDB configDB = new ConfigDB();
+                        configDB.HapusDinamis("barang_bukti", "id_barang_bukti", String.valueOf(id));
+                        loadBarangBuktiData();
+                    }
+                }
             }
         });
     }

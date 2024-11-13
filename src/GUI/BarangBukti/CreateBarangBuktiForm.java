@@ -19,9 +19,10 @@ public class CreateBarangBuktiForm extends JFrame {
     private JButton saveButton;
     private JButton cancelButton;
     private Map<String, Integer> tindakPidanaMap;
+    private Integer barangBuktiId;
 
-    public CreateBarangBuktiForm(BarangBuktiView parent) {
-        setTitle("Tambah Barang Bukti");
+    public CreateBarangBuktiForm(BarangBuktiView parent, BarangBukti barangBukti) {
+        setTitle(barangBukti == null ? "Tambah Barang Bukti" : "Edit Barang Bukti");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -30,6 +31,15 @@ public class CreateBarangBuktiForm extends JFrame {
 
         // Load tindak pidana data
         loadTindakPidanaData();
+
+        if (barangBukti != null) {
+            barangBuktiId = barangBukti.getId();
+            asalPemohonField.setText(barangBukti.getAsalPemohon());
+            tersangkaField.setText(barangBukti.getTersangka());
+            dokumenField.setText(barangBukti.getDokumen());
+            tahapField.setText(barangBukti.getTahap());
+            tindakPidanaComboBox.setSelectedItem(barangBukti.getTindakPidana());
+        }
 
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -41,20 +51,18 @@ public class CreateBarangBuktiForm extends JFrame {
                 String selectedTindakPidana = (String) tindakPidanaComboBox.getSelectedItem();
                 int tindakPidanaId = tindakPidanaMap.get(selectedTindakPidana);
 
-                try (Connection connection = ConfigDB.getConnection()) {
-                    String query = "INSERT INTO barang_bukti (asal_permohonan, tersangka, id_tindak_pidana, dokumen, tahap) VALUES (?, ?, ?, ?, ?)";
-                    PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setString(1, asalPemohon);
-                    statement.setString(2, tersangka);
-                    statement.setInt(3, tindakPidanaId);
-                    statement.setString(4, dokumen);
-                    statement.setString(5, tahap);
-                    statement.executeUpdate();
-                    parent.loadBarangBuktiData();
-                    dispose();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
+                ConfigDB configDB = new ConfigDB();
+                if (barangBuktiId == null) {
+                    String[] fields = {"asal_permohonan", "tersangka", "id_tindak_pidana", "dokumen", "tahap"};
+                    String[] values = {asalPemohon, tersangka, String.valueOf(tindakPidanaId), dokumen, tahap};
+                    configDB.UbahDinamis("barang_bukti", "id_barang_bukti", String.valueOf(barangBuktiId), fields, values);
+                } else {
+                    String[] fields = {"asal_permohonan", "tersangka", "id_tindak_pidana", "dokumen", "tahap"};
+                    String[] values = {asalPemohon, tersangka, String.valueOf(tindakPidanaId), dokumen, tahap};
+                    configDB.UbahDinamis("barang_bukti", "id_barang_bukti", String.valueOf(barangBuktiId), fields, values);
                 }
+                parent.loadBarangBuktiData();
+                dispose();
             }
         });
 
