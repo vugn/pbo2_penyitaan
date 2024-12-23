@@ -30,20 +30,20 @@ public class ConfigDB {
     }
 
     public String getFieldValueEdit(String[] Field, String[] value) {
-        StringBuilder hasil = new StringBuilder();
+        String hasil = "";
         int deteksi = Field.length - 1;
         try {
             for (int i = 0; i < Field.length; i++) {
                 if (i == deteksi) {
-                    hasil.append(Field[i]).append(" = ?");
+                    hasil += Field[i] + " = ?";
                 } else {
-                    hasil.append(Field[i]).append(" = ?, ");
+                    hasil += Field[i] + " = ?, ";
                 }
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error in getFieldValueEdit", e);
         }
-        return hasil.toString();
+        return hasil;
     }
 
     public void UbahDinamis(String NamaTabel, String PrimaryKey, String IsiPrimary, String[] Field, String[] Value) {
@@ -74,14 +74,14 @@ public class ConfigDB {
     }
 
     public void TambahDinamis(String NamaTabel, String[] Field, String[] Value) {
-        StringBuilder fields = new StringBuilder();
-        StringBuilder values = new StringBuilder();
+        String fields = "";
+        String values = "";
         for (int i = 0; i < Field.length; i++) {
-            fields.append(Field[i]);
-            values.append("?");
+            fields += Field[i];
+            values += "?";
             if (i < Field.length - 1) {
-                fields.append(", ");
-                values.append(", ");
+                fields += ", ";
+                values += ", ";
             }
         }
         String SQLTambah = "INSERT INTO " + NamaTabel + " (" + fields + ") VALUES (" + values + ")";
@@ -94,6 +94,30 @@ public class ConfigDB {
             JOptionPane.showMessageDialog(null, "Data Berhasil Ditambahkan");
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error in TambahDinamis", e);
+        }
+    }
+
+    public ResultSet CariDinamis(String NamaTabel, String[] Field, String[] Value) {
+        StringBuilder fields = new StringBuilder();
+        for (int i = 0; i < Field.length; i++) {
+            fields.append(Field[i]).append(" LIKE ?");
+            if (i < Field.length - 1) {
+                fields.append(" OR ");
+            }
+        }
+        String SQLCari = "SELECT * FROM " + NamaTabel + " WHERE " + fields;
+        try {
+            Connection connection = ConfigDB.getConnection();
+            PreparedStatement perintah = connection.prepareStatement(SQLCari);
+            for (int i = 0; i < Value.length; i++) {
+                perintah.setString(i + 1, "%" + Value[i] + "%");
+            }
+
+            System.out.println(perintah);
+            return perintah.executeQuery();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error in CariDinamis", e);
+            return null;
         }
     }
 }
