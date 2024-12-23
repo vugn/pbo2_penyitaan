@@ -20,6 +20,7 @@ and I use that for my final project in Pembangunan Berbasis Objek 2 (PBO 2) clas
   - [x] Create Barang Bukti
   - [x] Update Barang Bukti
   - [x] Delete Barang Bukti
+  - [x] Search Barang Bukti
 - [x] Institusi
    - [x] List Institusi
    - [x] Create Institusi
