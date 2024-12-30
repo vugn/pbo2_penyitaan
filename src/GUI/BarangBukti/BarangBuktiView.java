@@ -12,6 +12,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BarangBuktiView extends JFrame {
     private JTable barangBuktiTable;
@@ -21,6 +23,7 @@ public class BarangBuktiView extends JFrame {
     private JButton deleteButton;
     private JTextField searchField;
     private JButton searchButton;
+    private JButton reportButton;
 
     public BarangBuktiView() {
         setTitle("Daftar Barang Bukti");
@@ -102,7 +105,32 @@ public class BarangBuktiView extends JFrame {
                 }
             }
         });
+
+        reportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ConfigDB configDB = new ConfigDB();
+                    if (searchField.getText().isEmpty()) {
+                        configDB.TampilLaporan("src/Reports/barang_bukti.jrxml", "SELECT * FROM barang_bukti");
+                    } else {
+                        String searchText = searchField.getText();
+                        String sql = "SELECT * FROM barang_bukti WHERE asal_permohonan LIKE '%" + searchText + "%'" +
+                                " OR tersangka LIKE '%" + searchText + "%'" +
+                                " OR id_tindak_pidana LIKE '%" + searchText + "%'" +
+                                " OR dokumen LIKE '%" + searchText + "%'" +
+                                " OR tahap LIKE '%" + searchText + "%'";
+                        configDB.TampilLaporan("src/Reports/barang_bukti.jrxml", sql);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(BarangBuktiView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
+
+
+
 
     private void updateTable(ResultSet resultSet) {
         DefaultTableModel model = new DefaultTableModel();

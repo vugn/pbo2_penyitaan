@@ -1,5 +1,12 @@
 package ConfigDB;
 
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
+import java.io.File;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +125,25 @@ public class ConfigDB {
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Error in CariDinamis", e);
             return null;
+        }
+    }
+
+
+    public void TampilLaporan(String laporanFile, String SQL) throws SQLException{
+        try {
+            File file = new File(laporanFile);
+            JasperDesign jasDes = JRXmlLoader.load(file);
+
+            JRDesignQuery sqlQuery = new JRDesignQuery();
+            sqlQuery.setText(SQL);
+            jasDes.setQuery(sqlQuery);
+
+            JasperReport JR = JasperCompileManager.compileReport(jasDes);
+            JasperPrint JP = JasperFillManager.fillReport(JR,null,getConnection());
+            JasperViewer.viewReport(JP,false);
+        } catch (JRException e) {
+            JOptionPane.showMessageDialog(null,e.toString());
+
         }
     }
 }
