@@ -98,11 +98,11 @@ public class ConfigDB {
     }
 
     public ResultSet CariDinamis(String NamaTabel, String[] Field, String[] Value) {
-        StringBuilder fields = new StringBuilder();
+        String fields = "";
         for (int i = 0; i < Field.length; i++) {
-            fields.append(Field[i]).append(" LIKE ?");
+            fields += Field[i] + " LIKE ?";
             if (i < Field.length - 1) {
-                fields.append(" OR ");
+                fields += " OR ";
             }
         }
         String SQLCari = "SELECT * FROM " + NamaTabel + " WHERE " + fields;
